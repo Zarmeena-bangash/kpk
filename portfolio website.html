@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Portfolio</title>
+    <meta name="description" content="Single-page portfolio with About, Skills, Projects, and Contact sections." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg:#0f1720;          /* near-black background */
+            --card:#0f1728;        /* dark card */
+            --muted:#94a3b8;       /* muted text */
+            --accent:#06b6d4;      /* teal/cyan accent */
+            --accent-2:#7c3aed;    /* purple accent for gradients */
+            --glass: rgba(255,255,255,0.04);
+            --radius:12px;
+            color-scheme: dark;
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        /* Reset / base */
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            background:
+                radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.08), transparent 6%),
+                radial-gradient(900px 400px at 90% 90%, rgba(6,182,212,0.06), transparent 6%),
+                var(--bg);
+            color:#e6eef6;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            line-height:1.5;
+            padding-bottom:4rem;
+        }
+
+        /* Container */
+        .container{
+            width:min(1100px, 94%);
+            margin:2rem auto;
+        }
+
+        /* Header & nav */
+        header{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:1rem;
+            margin-bottom:2rem;
+        }
+
+        .brand{
+            display:flex;
+            gap:.9rem;
+            align-items:center;
+            text-decoration:none;
+            color:inherit;
+        }
+        .logo{
+            width:48px;
+            height:48px;
+            border-radius:10px;
+            background:linear-gradient(135deg,var(--accent),var(--accent-2));
+            display:grid;
+            place-items:center;
+            font-weight:700;
+            box-shadow:0 6px 18px rgba(12,15,20,0.6);
+        }
+        .brand h1{
+            font-size:1rem;
+            margin:0;
+            letter-spacing:0.2px;
+        }
+        .nav{
+            display:flex;
+            gap:1rem;
+            align-items:center;
+        }
+        .nav a{
+            color:var(--muted);
+            text-decoration:none;
+            padding:.6rem .8rem;
+            border-radius:8px;
+            transition:all 180ms ease;
+            font-weight:600;
+            font-size:.95rem;
+        }
+        .nav a:hover{
+            color: #fff;
+            background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            transform:translateY(-2px);
+        }
+        .cta{
+            background:linear-gradient(90deg,var(--accent),var(--accent-2));
+            padding:.55rem .9rem;
+            border-radius:10px;
+            color:#02121a;
+            font-weight:700;
+            box-shadow:0 8px 24px rgba(6,182,212,0.08);
+        }
+
+        /* Mobile nav (checkbox hack) */
+        #menu-toggle{ display:none; }
+        .menu-btn{
+            display:none;
+            width:44px;height:44px;
+            background:var(--glass);
+            border-radius:10px;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            border:1px solid rgba(255,255,255,0.03);
+        }
+        .menu-icon{
+            width:20px;height:2px;background:var(--muted);
+            position:relative;transition:200ms ease;
+        }
+        .menu-icon::before, .menu-icon::after{
+            content:"";position:absolute;left:0;width:20px;height:2px;background:var(--muted);
+        }
+        .menu-icon::before{top:-6px}
+        .menu-icon::after{top:6px}
+
+        /* Hero / intro */
+        .hero{
+            display:grid;
+            gap:1.4rem;
+            grid-template-columns:1fr 360px;
+            align-items:start;
+            margin-bottom:2.4rem;
+        }
+        .card{
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            border:1px solid rgba(255,255,255,0.04);
+            padding:1.6rem;
+            border-radius:var(--radius);
+            box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+        }
+        .intro h2{margin:0 0 .4rem 0}
+        .intro p{color:var(--muted);margin:0 0 1rem 0}
+        .profile{
+            display:flex;
+            gap:1rem;
+            align-items:center;
+        }
+        .avatar{
+            width:84px;height:84px;border-radius:14px;background:linear-gradient(135deg,var(--accent-2),var(--accent));
+            display:grid;place-items:center;font-weight:700;font-size:1.25rem;
+            box-shadow:0 8px 22px rgba(12,12,14,0.6);
+            flex-shrink:0;
+        }
+        .socials{display:flex;gap:.6rem;margin-top:.8rem}
+        .socials a{color:var(--muted);text-decoration:none;padding:.5rem;border-radius:8px;transition:200ms}
+        .socials a:hover{color:#fff;background:rgba(255,255,255,0.02);transform:translateY(-3px)}
+
+        /* Skills */
+        .skills-list{
+            display:flex;
+            gap:.6rem;
+            flex-wrap:wrap;
+            margin-top:.8rem;
+        }
+        .skill{
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            padding:.45rem .7rem;border-radius:999px;color:var(--muted);font-weight:600;font-size:.85rem;
+            border:1px solid rgba(255,255,255,0.03);
+            transition:all 160ms ease;
+        }
+        .skill:hover{color:#fff;transform:translateY(-4px);box-shadow:0 10px 30px rgba(3,7,18,0.6)}
+
+        /* Projects grid */
+        .projects-grid{
+            display:grid;
+            gap:1rem;
+            grid-template-columns:repeat(3,1fr);
+        }
+        .project{
+            overflow:hidden;
+            border-radius:12px;
+            position:relative;
+            min-height:140px;
+            padding:1rem;
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border:1px solid rgba(255,255,255,0.03);
+            transition:transform 220ms cubic-bezier(.2,.9,.24,1), box-shadow 220ms;
+        }
+        .project:hover{
+            transform:translateY(-8px) scale(1.01);
+            box-shadow:0 20px 50px rgba(2,6,23,0.6);
+        }
+        .project h3{margin:0 0 .4rem 0;font-size:1rem}
+        .project p{margin:0;color:var(--muted);font-size:.92rem}
+
+        /* Contact form */
+        form{display:grid;gap:.8rem}
+        label{font-size:.85rem;color:var(--muted)}
+        input[type="text"], input[type="email"], textarea{
+            width:100%;
+            padding:.7rem .9rem;
+            border-radius:10px;
+            background:transparent;
+            border:1px solid rgba(255,255,255,0.04);
+            color:inherit;
+            outline:none;
+            transition:box-shadow 160ms, border-color 160ms;
+            resize:vertical;
+        }
+        input:focus, textarea:focus{
+            box-shadow:0 6px 20px rgba(6,182,212,0.06);
+            border-color:rgba(6,182,212,0.18);
+        }
+        .btn{
+            display:inline-flex;align-items:center;gap:.6rem;padding:.6rem .85rem;border-radius:10px;border:0;
+            background:linear-gradient(90deg,var(--accent),var(--accent-2));
+            color:#02121a;font-weight:700;cursor:pointer;
+            transition:transform 160ms;
+        }
+        .btn:hover{transform:translateY(-3px)}
+
+        /* Footer */
+        footer{margin-top:2.4rem;color:var(--muted);text-align:center;font-size:.9rem}
+
+        /* Responsive */
+        @media (max-width:900px){
+            .hero{grid-template-columns:1fr}
+            .projects-grid{grid-template-columns:repeat(2,1fr)}
+            .nav{display:none}
+            .menu-btn{display:flex}
+        }
+        @media (max-width:560px){
+            .projects-grid{grid-template-columns:1fr}
+            .avatar{width:64px;height:64px;font-size:1rem}
+            .menu-btn{width:40px;height:40px}
+            .brand h1{font-size:.95rem}
+        }
+
+        /* Menu toggle visual change */
+        #menu-toggle:checked + label .menu-icon{background:transparent}
+        #menu-toggle:checked + label .menu-icon::before{transform:translateY(6px) rotate(45deg)}
+        #menu-toggle:checked + label .menu-icon::after{transform:translateY(-6px) rotate(-45deg)}
+
+        /* Small-screen menu panel */
+        .mobile-menu{
+            display:none;
+            margin-top:.9rem;
+            background:var(--card);
+            padding:.8rem;border-radius:10px;border:1px solid rgba(255,255,255,0.03)
+        }
+        #menu-toggle:checked ~ .mobile-menu{display:block}
+        .mobile-menu a{display:block;padding:.6rem;border-radius:8px;color:var(--muted);text-decoration:none}
+        .mobile-menu a:hover{color:#fff;background:rgba(255,255,255,0.02)}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="brand" href="#about" aria-label="Home">
+                <div class="logo">M</div>
+                <h1>Meenu — Developer</h1>
+            </a>
+
+            <nav class="nav" aria-label="Main navigation">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact" class="cta">Contact</a>
+            </nav>
+
+            <!-- Mobile menu toggle (CSS only) -->
+            <input id="menu-toggle" type="checkbox" />
+            <label for="menu-toggle" class="menu-btn" aria-hidden="true">
+                <span class="menu-icon" aria-hidden="true"></span>
+            </label>
+
+            <div class="mobile-menu" aria-hidden="false">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </header>
+
+        <!-- Hero / About -->
+        <section id="about" class="hero" aria-labelledby="about-heading">
+            <div class="card intro">
+                <div class="profile">
+                    <div class="avatar" aria-hidden="true">M</div>
+                    <div>
+                        <h2 id="about-heading">Hello — I'm Meenu</h2>
+                        <p>Front-end focused developer building clean and accessible websites. I like simple interfaces, smooth interactions, and performant code.</p>
+                        <div class="socials" aria-label="Social links">
+                            <a href="#" title="GitHub">GitHub</a>
+                            <a href="#" title="LinkedIn">LinkedIn</a>
+                            <a href="#" title="Twitter">Twitter</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="margin:1rem 0;border:0;border-top:1px solid rgba(255,255,255,0.03)">
+
+                <div>
+                    <strong style="display:block;margin-bottom:.4rem">What I do</strong>
+                    <p class="muted" style="margin:0;color:var(--muted)">I design and implement responsive UIs with a focus on performance and accessibility. I enjoy collaborating with teams to ship useful features.</p>
+                </div>
+            </div>
+
+            <aside class="card" style="height:100%;">
+                <h3 style="margin-top:0">Quick facts</h3>
+                <p style="color:var(--muted);margin-top:0">Based in — Your City • Available for freelance and full-time roles</p>
+
+                <div style="margin-top:1rem">
+                    <strong style="display:block;margin-bottom:.5rem">Skills</strong>
+                    <div class="skills-list" id="skills">
+                        <span class="skill">HTML</span>
+                        <span class="skill">CSS</span>
+                        <span class="skill">Responsive Design</span>
+                        <span class="skill">Accessibility</span>
+                        <span class="skill">Performance</span>
+                        <span class="skill">Design Systems</span>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <!-- Projects -->
+        <section id="projects" aria-labelledby="projects-heading" style="margin-bottom:1.6rem">
+            <h2 id="projects-heading" style="margin-bottom:.6rem">Projects</h2>
+            <div class="projects-grid">
+                <article class="project card" aria-labelledby="p1">
+                    <h3 id="p1">Portfolio Template</h3>
+                    <p>Minimal, responsive portfolio template built with semantic HTML & modern CSS. Focus on accessibility and performance.</p>
+                </article>
+
+                <article class="project card" aria-labelledby="p2">
+                    <h3 id="p2">Product Landing</h3>
+                    <p>Clean landing page with modular components and a focus on conversion and clarity. Includes a simple grid-based layout.</p>
+                </article>
+
+                <article class="project card" aria-labelledby="p3">
+                    <h3 id="p3">UI Components Kit</h3>
+                    <p>Reusable component set (cards, forms, buttons) with consistent spacing, theming, and transitions ready for integration.</p>
+                </article>
+
+                <article class="project card" aria-labelledby="p4">
+                    <h3 id="p4">Blog Theme</h3>
+                    <p>Responsive blog theme emphasizing readable typography and comfortable line-lengths for long-form content.</p>
+                </article>
+
+                <article class="project card" aria-labelledby="p5">
+                    <h3 id="p5">E‑commerce UI</h3>
+                    <p>Simple product grid and checkout flow with focus on micro-interactions and fast load times.</p>
+                </article>
+
+                <article class="project card" aria-labelledby="p6">
+                    <h3 id="p6">Interactive Form</h3>
+                    <p>Accessible form UI with clear states, helpful validation hints, and keyboard-friendly controls.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" aria-labelledby="contact-heading" class="card" style="margin-bottom:1.6rem">
+            <h2 id="contact-heading" style="margin-top:0">Contact</h2>
+            <p style="color:var(--muted);margin-top:0">Interested in working together? Send a message and I'll get back to you.</p>
+
+            <!-- Note: This form uses mailto for demonstration and requires a mail client. Remove action to use backend later. -->
+            <form action="mailto:your.email@example.com" method="post" enctype="text/plain" novalidate>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;">
+                    <div>
+                        <label for="name">Name</label>
+                        <input id="name" name="name" type="text" placeholder="Your name" required>
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Brief message..." required></textarea>
+                </div>
+
+                <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.4rem">
+                    <button type="submit" class="btn">Send</button>
+                </div>
+            </form>
+        </section>
+
+        <footer>
+            © <time datetime="2026">2026</time> Meenu — Built with HTML & CSS · Designed for responsiveness and accessibility.
+        </footer>
+    </div>
+</body>
+</html>
